@@ -1,3 +1,4 @@
+"""Setup required dependencies and details about package."""
 import os
 
 from setuptools import setup, find_packages
@@ -17,17 +18,21 @@ requires = [
     'transaction',
     'zope.sqlalchemy',
     'waitress',
+    'tox',
+    'pyramid_ipython',
+    'ipython',
 ]
 
 tests_require = [
     'WebTest >= 1.3.1',  # py3 compat
     'pytest',
     'pytest-cov',
+    'tox',
 ]
 
 setup(
     name='learning_journal',
-    version='0.0',
+    version='0.5',
     description='Learning-Journal',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
@@ -36,8 +41,8 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
     ],
-    author='',
-    author_email='',
+    author='Alex',
+    author_email='ajshort2010@hotmail.com',
     url='',
     keywords='web pyramid pylons',
     packages=find_packages(),
