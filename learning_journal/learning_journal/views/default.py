@@ -1,35 +1,58 @@
 """Views for the Learning Journal."""
-from pyramid.response import Response
-import io
-import os
+from pyramid.view import view_config
+from pyramid.exceptions import HTTPNotFound
+from learning_journal.data.journal import JOURNAL
 
 
-HERE = os.path.dirname(__file__)
-
-
+@view_config(
+    route_name='home',
+    renderer='../templates/index.jinja2'
+)
 def list_view(request):
     """The default home page view return."""
-    with io.open(os.path.join(HERE, '../templates/index.html')) as the_file:
-        imported_text = the_file.read()
-    return Response(imported_text)
+    return {'id': '',
+            'title': '',
+            'date-created': '',
+            }
 
 
+@view_config(
+    route_name='entry',
+    renderer='../templates/single_entry.jinja2'
+)
 def detail_view(request):
-    """The default single entry page view return."""
-    with io.open(os.path.join(HERE, '../templates/single_entry.html')) as the_file:
-        imported_text = the_file.read()
-    return Response(imported_text)
+    """The default home page view return."""
+    the_id = int(request.matchdict['id'])
+    try:
+        journals = JOURNAL[the_id]
+    except IndexError:
+        raise HTTPNotFound
+    return {
+        'journals': journals
+    }
 
 
-def create_view(request):
-    """The default new entry page view return."""
-    with io.open(os.path.join(HERE, '../templates/new_entry.html')) as the_file:
-        imported_text = the_file.read()
-    return Response(imported_text)
+@view_config(
+    route_name='new-entry',
+    renderer='../templates/new_entry.jinja2'
+)
+def new_entry_view(request):
+    """The default home page view return."""
+    return {'id': '',
+            'title': '',
+            'date-created': '',
+            'body': '',
+            }
 
 
-def update_view(request):
-    """The default edit entry page view return."""
-    with io.open(os.path.join(HERE, '../templates/edit_entry.html')) as the_file:
-        imported_text = the_file.read()
-    return Response(imported_text)
+@view_config(
+    route_name='edit',
+    renderer='../templates/edit_entry.jinja2'
+)
+def edit_entry_view(request):
+    """The default home page view return."""
+    return {'id': '',
+            'title': '',
+            'date-created': '',
+            'body': '',
+            }
