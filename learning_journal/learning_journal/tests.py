@@ -1,65 +1,64 @@
-import unittest
-import transaction
-
+"""Test for learning journal."""
 from pyramid import testing
+from pyramid.response import Response
+import pytest
 
 
-def dummy_request(dbsession):
-    return testing.DummyRequest(dbsession=dbsession)
+@pytest.fixture
+def httprequest():
+    """Ger."""
+    req = testing.DummyRequest()
+    return req
 
 
-class BaseTest(unittest.TestCase):
-    def setUp(self):
-        self.config = testing.setUp(settings={
-            'sqlalchemy.url': 'sqlite:///:memory:'
-        })
-        self.config.include('.models')
-        settings = self.config.get_settings()
-
-        from .models import (
-            get_engine,
-            get_session_factory,
-            get_tm_session,
-            )
-
-        self.engine = get_engine(settings)
-        session_factory = get_session_factory(self.engine)
-
-        self.session = get_tm_session(session_factory, transaction.manager)
-
-    def init_database(self):
-        from .models.meta import Base
-        Base.metadata.create_all(self.engine)
-
-    def tearDown(self):
-        from .models.meta import Base
-
-        testing.tearDown()
-        transaction.abort()
-        Base.metadata.drop_all(self.engine)
+def test_return_of_views_are_responses(httprequest):
+    """."""
+    from pyramid_learning_journal.views.default import (
+        list_view,
+        detail_view,
+        create_view,
+        update_view
+    )
+    assert isinstance(list_view(httprequest), Response)
+    assert isinstance(detail_view(httprequest), Response)
+    assert isinstance(create_view(httprequest), Response)
+    assert isinstance(update_view(httprequest), Response)
 
 
-class TestMyViewSuccessCondition(BaseTest):
-
-    def setUp(self):
-        super(TestMyViewSuccessCondition, self).setUp()
-        self.init_database()
-
-        from .models import MyModel
-
-        model = MyModel(name='one', value=55)
-        self.session.add(model)
-
-    def test_passing_view(self):
-        from .views.default import my_view
-        info = my_view(dummy_request(self.session))
-        self.assertEqual(info['one'].name, 'one')
-        self.assertEqual(info['project'], 'Learning-Journal')
+def test_html_content_in_response_index(httprequest):
+    """."""
+    from pyramid_learning_journal.views.default import list_view
+    file_content = open('/templates/src/index.html').read()
+    response = list_view(httprequest)
+    assert file_content == response.text
 
 
-class TestMyViewFailureCondition(BaseTest):
+def test_html_content_in_response_new_entry(httprequest):
+    """."""
+    from pyramid_learning_journal.views.default import list_view
+    file_content = open('/templates/src/new_entry.html').read()
+    response = list_view(httprequest)
+    assert file_content == response.text
 
-    def test_failing_view(self):
-        from .views.default import my_view
-        info = my_view(dummy_request(self.session))
-        self.assertEqual(info.status_int, 500)
+
+def test_html_content_in_response_single_entry(httprequest):
+    """."""
+    from pyramid_learning_journal.views.default import list_view
+    file_content = open('/templates/src/single_entry.html').read()
+    response = list_view(httprequest)
+    assert file_content == response.text
+
+
+def test_html_content_in_response_edit_entry(httprequest):
+    """."""
+    from pyramid_learning_journal.views.default import list_view
+    file_content = open('/templates/src/edit_entry.html').read()
+    response = list_view(httprequest)
+    assert file_content == response.text
+
+
+def test_response_status_code(httprequest):
+    """."""
+    from pyramid_learning_journal.views.default import list_view
+    response = list_view(httprequest)
+    assert response.status_code == 200
