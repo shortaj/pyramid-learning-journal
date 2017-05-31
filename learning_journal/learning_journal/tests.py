@@ -28,7 +28,7 @@ def test_return_of_views_are_responses(httprequest):
 def test_html_content_in_response_index(httprequest):
     """."""
     from pyramid_learning_journal.views.default import list_view
-    file_content = open('/templates/src/index.html').read()
+    file_content = open('/templates/index.html').read()
     response = list_view(httprequest)
     assert file_content == response.text
 
@@ -36,7 +36,7 @@ def test_html_content_in_response_index(httprequest):
 def test_html_content_in_response_new_entry(httprequest):
     """."""
     from pyramid_learning_journal.views.default import list_view
-    file_content = open('/templates/src/new_entry.html').read()
+    file_content = open('/templates/new_entry.html').read()
     response = list_view(httprequest)
     assert file_content == response.text
 
@@ -44,7 +44,7 @@ def test_html_content_in_response_new_entry(httprequest):
 def test_html_content_in_response_single_entry(httprequest):
     """."""
     from pyramid_learning_journal.views.default import list_view
-    file_content = open('/templates/src/single_entry.html').read()
+    file_content = open('/templates/single_entry.html').read()
     response = list_view(httprequest)
     assert file_content == response.text
 
@@ -52,7 +52,7 @@ def test_html_content_in_response_single_entry(httprequest):
 def test_html_content_in_response_edit_entry(httprequest):
     """."""
     from pyramid_learning_journal.views.default import list_view
-    file_content = open('/templates/src/edit_entry.html').read()
+    file_content = open('/templates/edit_entry.html').read()
     response = list_view(httprequest)
     assert file_content == response.text
 
