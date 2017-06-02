@@ -1,19 +1,21 @@
 """Views for the Learning Journal."""
 from pyramid.view import view_config
 from pyramid.exceptions import HTTPNotFound
+from pyramid.httpexceptions import HTTPFound
 from learning_journal.data.journal import JOURNAL
+from datetime import date as Date
+
+from ..models import Entry
 
 
 @view_config(
     route_name='home',
     renderer='../templates/index.jinja2'
 )
-def list_view(request):
+def home_view(request):
     """The default home page view return."""
-    return {'id': '',
-            'title': '',
-            'date-created': '',
-            }
+    entries = request.dbsession.query(Entry).order_by(Entry.date).all()
+    return {'entries': entries}
 
 
 @view_config(
@@ -22,14 +24,11 @@ def list_view(request):
 )
 def detail_view(request):
     """The default home page view return."""
-    the_id = int(request.matchdict['id'])
     try:
-        journals = JOURNAL[the_id]
+        e = request.dbsession.query(Entry).filter_by(id=request.matchdict['id'].first())
     except IndexError:
         raise HTTPNotFound
-    return {
-        'journals': journals
-    }
+    return {'entries': e}
 
 
 @view_config(
@@ -38,11 +37,13 @@ def detail_view(request):
 )
 def new_entry_view(request):
     """The default home page view return."""
-    return {'id': '',
-            'title': '',
-            'date-created': '',
-            'body': '',
-            }
+    if request.method == "POST":
+        title = request.POST['title']
+        body = request.POST['body']
+        date = request.POST['date']
+        new_entry = Entry(title=title, body=body, date=date)
+        request.dbsession.add(new_entry)
+    return HTTPFound(location=request.route_url('home'))
 
 
 @view_config(
@@ -51,8 +52,12 @@ def new_entry_view(request):
 )
 def edit_entry_view(request):
     """The default home page view return."""
-    return {'id': '',
-            'title': '',
-            'date-created': '',
-            'body': '',
-            }
+    if request.method == "POST":
+        e = request.dbsession.query(Entry).filter_by(id=request.matchdict['id'].first())
+        e.title = request.POST['title']
+        e.body = request.POST['body']
+        e.date = request.POST['date']
+        return HTTPFound(location=request.route_url('home'))
+    elif request.method == "GET":
+        e = request.dbsession.query(Entry).filter_by(id=request.matchdict['id'].first())
+        return {'entries': e}

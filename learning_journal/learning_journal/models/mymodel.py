@@ -1,18 +1,20 @@
 from sqlalchemy import (
     Column,
+    Unicode,
     Index,
     Integer,
     Text,
+    Date
 )
 
 from .meta import Base
 
 
-class MyModel(Base):
-    __tablename__ = 'models'
+class Entry(Base):
+    """."""
+
+    __tablename__ = 'entries'
     id = Column(Integer, primary_key=True)
-    name = Column(Text)
-    value = Column(Integer)
-
-
-Index('my_index', MyModel.name, unique=True, mysql_length=255)
+    title = Column(Unicode)
+    body = Column(Unicode)
+    date = Column(Date)

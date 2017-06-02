@@ -21,6 +21,7 @@ requires = [
     'tox',
     'pyramid_ipython',
     'ipython',
+    'psycopg2',
 ]
 
 tests_require = [
