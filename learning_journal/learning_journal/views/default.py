@@ -1,33 +1,35 @@
+"""Views for the Learning Journal."""
 from pyramid.response import Response
-from pyramid.view import view_config
-
-from sqlalchemy.exc import DBAPIError
-
-from ..models import MyModel
+import io
+import os
 
 
-@view_config(route_name='home', renderer='../templates/mytemplate.jinja2')
-def my_view(request):
-    try:
-        query = request.dbsession.query(MyModel)
-        one = query.filter(MyModel.name == 'one').first()
-    except DBAPIError:
-        return Response(db_err_msg, content_type='text/plain', status=500)
-    return {'one': one, 'project': 'Learning-Journal'}
+HERE = os.path.dirname(os.path.dirname(__file__))
 
 
-db_err_msg = """\
-Pyramid is having a problem using your SQL database.  The problem
-might be caused by one of the following things:
+def list_view(request):
+    """The default home page view return."""
+    with io.open(os.path.join(HERE, 'templates/src/index.html')) as the_file:
+        imported_text = the_file.read()
+    return Response(imported_text)
 
-1.  You may need to run the "initialize_learning_journal_db" script
-    to initialize your database tables.  Check your virtual
-    environment's "bin" directory for this script and try to run it.
 
-2.  Your database server may not be running.  Check that the
-    database server referred to by the "sqlalchemy.url" setting in
-    your "development.ini" file is running.
+def detail_view(request):
+    """The default single entry page view return."""
+    with io.open(os.path.join(HERE, 'templates/src/single_entry.html')) as the_file:
+        imported_text = the_file.read()
+    return Response(imported_text)
 
-After you fix the problem, please restart the Pyramid application to
-try it again.
-"""
+
+def create_view(request):
+    """The default new entry page view return."""
+    with io.open(os.path.join(HERE, 'templates/src/new_entry.html')) as the_file:
+        imported_text = the_file.read()
+    return Response(imported_text)
+
+
+def update_view(request):
+    """The default edit entry page view return."""
+    with io.open(os.path.join(HERE, 'templates/src/edit_entry.html')) as the_file:
+        imported_text = the_file.read()
+    return Response(imported_text)
