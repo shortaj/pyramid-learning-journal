@@ -22,7 +22,7 @@ def list_view(request):
 )
 def detail_view(request):
     """The default home page view return."""
-    the_id = int(request.matchdict['id'])
+    the_id = request.matchdict['id']
     try:
         journals = JOURNAL[the_id]
     except IndexError:
