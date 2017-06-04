@@ -2,6 +2,11 @@
 from pyramid import testing
 from pyramid.response import Response
 import pytest
+import os
+import io
+
+
+HERE = os.path.dirname(__file__)
 
 
 @pytest.fixture
@@ -13,7 +18,7 @@ def httprequest():
 
 def test_return_of_views_are_responses(httprequest):
     """."""
-    from pyramid_learning_journal.views.default import (
+    from .views.default import (
         list_view,
         detail_view,
         create_view,
@@ -27,38 +32,42 @@ def test_return_of_views_are_responses(httprequest):
 
 def test_html_content_in_response_index(httprequest):
     """."""
-    from pyramid_learning_journal.views.default import list_view
-    file_content = open('/templates/src/index.html').read()
+    from learning_journal.views.default import list_view
+    with io.open(os.path.join(HERE, 'templates/src/index.html')) as the_file:
+        file_content = the_file.read()
     response = list_view(httprequest)
     assert file_content == response.text
 
 
 def test_html_content_in_response_new_entry(httprequest):
     """."""
-    from pyramid_learning_journal.views.default import list_view
-    file_content = open('/templates/src/new_entry.html').read()
-    response = list_view(httprequest)
+    from .views.default import create_view
+    with io.open(os.path.join(HERE, 'templates/src/new_entry.html')) as the_file:
+        file_content = the_file.read()
+    response = create_view(httprequest)
     assert file_content == response.text
 
 
 def test_html_content_in_response_single_entry(httprequest):
     """."""
-    from pyramid_learning_journal.views.default import list_view
-    file_content = open('/templates/src/single_entry.html').read()
-    response = list_view(httprequest)
+    from .views.default import detail_view
+    with io.open(os.path.join(HERE, 'templates/src/single_entry.html')) as the_file:
+        file_content = the_file.read()
+    response = detail_view(httprequest)
     assert file_content == response.text
 
 
 def test_html_content_in_response_edit_entry(httprequest):
     """."""
-    from pyramid_learning_journal.views.default import list_view
-    file_content = open('/templates/src/edit_entry.html').read()
-    response = list_view(httprequest)
+    from learning_journal.views.default import update_view
+    with io.open(os.path.join(HERE, 'templates/src/edit_entry.html')) as the_file:
+        file_content = the_file.read()
+    response = update_view(httprequest)
     assert file_content == response.text
 
 
 def test_response_status_code(httprequest):
     """."""
-    from pyramid_learning_journal.views.default import list_view
+    from learning_journal.views.default import list_view
     response = list_view(httprequest)
     assert response.status_code == 200
