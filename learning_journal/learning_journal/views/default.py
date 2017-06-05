@@ -1,33 +1,63 @@
-from pyramid.response import Response
+"""Views for the Learning Journal."""
 from pyramid.view import view_config
+from pyramid.exceptions import HTTPNotFound
+from pyramid.httpexceptions import HTTPFound
+from learning_journal.data.journal import JOURNAL
+from datetime import date as Date
 
-from sqlalchemy.exc import DBAPIError
-
-from ..models import MyModel
+from ..models import Entry
 
 
-@view_config(route_name='home', renderer='../templates/mytemplate.jinja2')
-def my_view(request):
+@view_config(
+    route_name='home',
+    renderer='../templates/index.jinja2'
+)
+def home_view(request):
+    """The default home page view return."""
+    entries = request.dbsession.query(Entry).order_by(Entry.date).all()
+    return {'entries': entries}
+
+
+@view_config(
+    route_name='entry',
+    renderer='../templates/single_entry.jinja2'
+)
+def detail_view(request):
+    """The default home page view return."""
     try:
-        query = request.dbsession.query(MyModel)
-        one = query.filter(MyModel.name == 'one').first()
-    except DBAPIError:
-        return Response(db_err_msg, content_type='text/plain', status=500)
-    return {'one': one, 'project': 'Learning-Journal'}
+        e = request.dbsession.query(Entry).filter_by(id=request.matchdict['id'].first())
+    except IndexError:
+        raise HTTPNotFound
+    return {'entries': e}
 
 
-db_err_msg = """\
-Pyramid is having a problem using your SQL database.  The problem
-might be caused by one of the following things:
+@view_config(
+    route_name='new-entry',
+    renderer='../templates/new_entry.jinja2'
+)
+def new_entry_view(request):
+    """The default home page view return."""
+    if request.method == "POST":
+        title = request.POST['title']
+        body = request.POST['body']
+        date = request.POST['date']
+        new_entry = Entry(title=title, body=body, date=date)
+        request.dbsession.add(new_entry)
+    return HTTPFound(location=request.route_url('home'))
 
-1.  You may need to run the "initialize_learning_journal_db" script
-    to initialize your database tables.  Check your virtual
-    environment's "bin" directory for this script and try to run it.
 
-2.  Your database server may not be running.  Check that the
-    database server referred to by the "sqlalchemy.url" setting in
-    your "development.ini" file is running.
-
-After you fix the problem, please restart the Pyramid application to
-try it again.
-"""
+@view_config(
+    route_name='edit',
+    renderer='../templates/edit_entry.jinja2'
+)
+def edit_entry_view(request):
+    """The default home page view return."""
+    if request.method == "POST":
+        e = request.dbsession.query(Entry).filter_by(id=request.matchdict['id'].first())
+        e.title = request.POST['title']
+        e.body = request.POST['body']
+        e.date = request.POST['date']
+        return HTTPFound(location=request.route_url('home'))
+    elif request.method == "GET":
+        e = request.dbsession.query(Entry).filter_by(id=request.matchdict['id'].first())
+        return {'entries': e}
