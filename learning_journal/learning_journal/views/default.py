@@ -23,7 +23,7 @@ def home_view(request):
     renderer='../templates/single_entry.jinja2'
 )
 def detail_view(request):
-    """The default home page view return."""
+    """The default single-entry page view return."""
     try:
         e = request.dbsession.query(Entry).filter_by(id=request.matchdict['id'].first())
     except IndexError:

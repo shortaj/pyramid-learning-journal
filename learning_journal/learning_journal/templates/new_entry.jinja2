@@ -1,7 +1,14 @@
 {% extends "layout.jinja2" %}
+    {% block title %}
+    New Entry
+    {% endblock %}
+    {% block body %}
+    <div class="form"
+        <form method="post">
 
-    Title:<input type="text" name="title"><hr>
-    <textarea name="body" cols="40" rows="10"></textarea>
-    <input type="submit" name="submit">
-
-{% endblock %}
+            Title:<input type="text" name="title"><hr>
+            Body:<textarea name="body" cols="40" rows="10">"Today I learned..."</textarea>
+            <input id="submit_button" type="submit" value="Submit">
+        </form>
+    </div>
+    {% endblock %}
