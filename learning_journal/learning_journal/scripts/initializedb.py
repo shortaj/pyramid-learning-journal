@@ -1,6 +1,7 @@
 import os
 import sys
 import transaction
+import datetime
 
 from pyramid.paster import (
     get_appsettings,
@@ -15,8 +16,29 @@ from ..models import (
     get_session_factory,
     get_tm_session,
     )
-from ..models import MyModel
 
+from pyramid.paster import (
+    get_appsettings,
+    setup_logging,
+)
+
+from pyramid.scripts.common import parse_vars
+
+from ..models.meta import Base
+from ..models import (
+    get_engine,
+    get_session_factory,
+    get_tm_session,
+)
+from ..models import Entry
+
+ENTRIES = [
+    {
+    'title': 'Test',
+    'body': 'Testing.',
+    'date': datetime.date.today()
+    }
+]
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
@@ -34,12 +56,15 @@ def main(argv=sys.argv):
     settings = get_appsettings(config_uri, options=options)
 
     engine = get_engine(settings)
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
 
     session_factory = get_session_factory(engine)
 
     with transaction.manager:
         dbsession = get_tm_session(session_factory, transaction.manager)
-
-        model = MyModel(name='one', value=1)
+        for entry in ENTRIES:
+            model = Entry(title=entry['title'],
+                        body=entry['body'],
+                        date=entry['date'])
         dbsession.add(model)
