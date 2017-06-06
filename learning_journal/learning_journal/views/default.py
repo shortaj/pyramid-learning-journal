@@ -2,7 +2,6 @@
 from pyramid.view import view_config
 from pyramid.exceptions import HTTPNotFound
 from pyramid.httpexceptions import HTTPFound
-from learning_journal.data.journal import JOURNAL
 from datetime import date as Date
 
 from ..models import Entry
@@ -25,14 +24,14 @@ def home_view(request):
 def detail_view(request):
     """The default single-entry page view return."""
     try:
-        e = request.dbsession.query(Entry).filter_by(id=request.matchdict['id'].first())
+        e = request.dbsession.query(Entry).get(int(request.matchdict['id']))
     except IndexError:
         raise HTTPNotFound
-    return {'entries': e}
+    return {'entry': e}
 
 
 @view_config(
-    route_name='new-entry',
+    route_name='new_entry',
     renderer='../templates/new_entry.jinja2'
 )
 def new_entry_view(request):
@@ -40,9 +39,12 @@ def new_entry_view(request):
     if request.method == "POST":
         title = request.POST['title']
         body = request.POST['body']
-        date = request.POST['date']
+        date = Date.today()
         new_entry = Entry(title=title, body=body, date=date)
         request.dbsession.add(new_entry)
+        return HTTPFound(location=request.route_url('home'))
+    elif request.method == 'GET':
+        return {}
     return HTTPFound(location=request.route_url('home'))
 
 
@@ -51,13 +53,13 @@ def new_entry_view(request):
     renderer='../templates/edit_entry.jinja2'
 )
 def edit_entry_view(request):
-    """The default home page view return."""
+    """Set the edit POST and GET http responses."""
+    e = request.dbsession.query(Entry).get(request.matchdict['id'])
     if request.method == "POST":
-        e = request.dbsession.query(Entry).filter_by(id=request.matchdict['id'].first())
-        e.title = request.POST['title']
+        e.title = request.POST['title'].capitalize()
         e.body = request.POST['body']
-        e.date = request.POST['date']
-        return HTTPFound(location=request.route_url('home'))
+        e.date = Date.today()
+        request.dbsession.flush()
+        return HTTPFound(location=request.route_url('entry', id=e.id))
     elif request.method == "GET":
-        e = request.dbsession.query(Entry).filter_by(id=request.matchdict['id'].first())
-        return {'entries': e}
+        return {'entry': e}

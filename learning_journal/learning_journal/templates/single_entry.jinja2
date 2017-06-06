@@ -1,37 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>The Short Side</title>
-    <link rel="stylesheet" type="text/css" href="../static/reset.css">
-    <link rel="stylesheet" type="text/css" href="../static/style.css">
-</head>
-<body>
-    <header class="header">
-        <div class="icons">
-            <ul class="icon_menu">
-                <li><a href=""><img src="../static/png/001-home.png"></a></li> <!--Home Icon, plainicon, http://www.plainicon.com-->
-                <li><a href=""><img src="../static/png/002-calendar.png"></a></li><!--Calendar Icon, Madebyoliver-->
-                <li><a href=""><img src="../static/png/003-linked-in-square-button.png"></a><li><!--Linked-In Icon, http://www.plainicon.com-->
-                <li><a href=""><img src="../static/png/004-circle.png"></a></li><!--Github Icon, Dave Gandy, http://fontawesome.io-->
-            </ul>
-        </div>
-        <hr>
-    </header><!-- /header -->
-        <div class="journal_template">
-            <h2>Title</h2>
-            <h3>Sample Date</h3>
-            <hr>
-            <p>
-            Bacon ipsum dolor amet burgdoggen chicken pork loin salami tongue. Ball tip t-bone prosciutto alcatra, venison pork chop kevin landjaeger hamburger jerky sirloin bacon tail shoulder shankle. Burgdoggen shankle sausage pork frankfurter. Frankfurter doner fatback flank bresaola pig meatloaf. Bacon leberkas rump filet mignon meatloaf ribeye ball tip kielbasa short loin.
-
-            Capicola kevin t-bone, ribeye ground round pig shank jerky chicken. Brisket flank pig beef ham hock. Meatball drumstick pig, kielbasa frankfurter andouille strip steak kevin corned beef pastrami ground round landjaeger. Doner turkey sausage pancetta sirloin pork bresaola hamburger biltong pork loin meatloaf shankle ground round.
-            </p>
-        </div>
-    <footer>
-        <div class="footer">
-            <hr>
-            <h3>Created By: Alex Short</h3>
-        </div>
-    </footer>
-</body>
-</html>
+{% extends "layout.jinja2" %}
+{% block body %}
+    <div>
+        <form method="get" accept-charset="utf-8">
+        <h4 class="entry">{{ entry.title }}</h4>
+        <p class="date">{{ entry.date }}</p><hr class="entry"align="left">
+        <p>{{ entry.body }}</p><hr class="entry"align="left">
+        <a href="{{ request.route_url('edit', id=entry.id)}}">Edit</a>
+        </form>
+    </div>
+{% endblock %}

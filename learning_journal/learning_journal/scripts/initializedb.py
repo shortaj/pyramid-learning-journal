@@ -32,9 +32,13 @@ from ..models import (
 )
 from ..models import Entry
 
-ENTRIES = [{'id': 0, 'title': 'Test', 'body': 'This is a test.', 'date': datetime.datetime.now()},
-{'id': 1, 'title': 'Test', 'body': 'This is a test.', 'date': datetime.datetime.now()}]
-
+ENTRIES = [
+    {
+    'title': 'Test',
+    'body': 'Testing.',
+    'date': datetime.date.today()
+    }
+]
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
@@ -62,6 +66,5 @@ def main(argv=sys.argv):
         for entry in ENTRIES:
             model = Entry(title=entry['title'],
                         body=entry['body'],
-                        date=entry['date'],
-                        id=entry['id'])
-            dbsession.add(model)
+                        date=entry['date'])
+        dbsession.add(model)

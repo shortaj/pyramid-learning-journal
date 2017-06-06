@@ -1,4 +1,11 @@
 {% extends "layout.jinja2" %}
+{% block title %} Short Side {% endblock%}
 {% block body %}
-
+    {% for entry in entries %}
+    <div class="journaldivs">
+        <h4><a href="{{ request.route_url('entry', id=entry.id) }}">{{ entry.title }}</a></h4>
+        <hr class="journaldivs">
+        <p class="date">{{ entry.date }}</p>
+    </div>
+    {% endfor %}
 {% endblock %}
