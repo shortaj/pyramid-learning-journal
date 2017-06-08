@@ -8,3 +8,5 @@ def includeme(config):
     config.add_route('entry', '/journal/{id:\d+}')
     config.add_route('new_entry', '/journal/new-entry')
     config.add_route('edit', '/journal/{id:\d+}/edit-entry')
+    config.add_route('login', '/login')
+    config.add_route('logout', '/logout')

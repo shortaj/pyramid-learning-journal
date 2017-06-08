@@ -5,7 +5,7 @@
     {% block body %}
     <div class="form">
         <form method="POST">
-
+            <input type="hidden" name="csrf_token" value="{{ request.session.get_csrf_token() }}" />
             <label for="title">Title: </label><input class="input" type="text" name="title" value="{{ entry.title }}"><hr class="entry" align="left">
             <label for="body">Body: </label><textarea name="body" cols="40" rows="10" resize=none>{{ entry.body }}</textarea>
             <input id="submit_button" type="submit" value="Submit">

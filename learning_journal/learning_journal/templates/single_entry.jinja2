@@ -5,7 +5,9 @@
         <h4 class="entry">{{ entry.title }}</h4>
         <p class="date">{{ entry.date }}</p><hr class="entry"align="left">
         <p>{{ entry.body }}</p><hr class="entry"align="left">
-        <a href="{{ request.route_url('edit', id=entry.id)}}">Edit</a>
+        {% if request.authenticated_userid %}
+            <a href="{{ request.route_url('edit', id=entry.id)}}">Edit</a>
+        {% endif %}
         </form>
     </div>
 {% endblock %}

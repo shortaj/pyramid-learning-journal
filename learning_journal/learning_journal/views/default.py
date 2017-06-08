@@ -3,13 +3,16 @@ from pyramid.view import view_config
 from pyramid.exceptions import HTTPNotFound
 from pyramid.httpexceptions import HTTPFound
 from datetime import date as Date
+from pyramid.security import remember, forget
+from learning_journal.security import check_credentials
 
 from ..models import Entry
 
 
 @view_config(
     route_name='home',
-    renderer='../templates/index.jinja2'
+    renderer='../templates/index.jinja2',
+    require_csrf=False
 )
 def home_view(request):
     """The default home page view return."""
@@ -19,7 +22,8 @@ def home_view(request):
 
 @view_config(
     route_name='entry',
-    renderer='../templates/single_entry.jinja2'
+    renderer='../templates/single_entry.jinja2',
+    require_csrf=False
 )
 def detail_view(request):
     """The default single-entry page view return."""
@@ -32,7 +36,9 @@ def detail_view(request):
 
 @view_config(
     route_name='new_entry',
-    renderer='../templates/new_entry.jinja2'
+    renderer='../templates/new_entry.jinja2',
+    permission='token',
+    require_csrf=True
 )
 def new_entry_view(request):
     """The default home page view return."""
@@ -50,7 +56,9 @@ def new_entry_view(request):
 
 @view_config(
     route_name='edit',
-    renderer='../templates/edit_entry.jinja2'
+    renderer='../templates/edit_entry.jinja2',
+    permission='token',
+    require_csrf=True
 )
 def edit_entry_view(request):
     """Set the edit POST and GET http responses."""
@@ -63,3 +71,32 @@ def edit_entry_view(request):
         return HTTPFound(location=request.route_url('entry', id=e.id))
     elif request.method == "GET":
         return {'entry': e}
+
+
+@view_config(
+    route_name='login',
+    renderer='../templates/login.jinja2',
+    require_csrf=False
+)
+def login_view(request):
+    """Set the login route and view."""
+    if request.method == "GET":
+        return {}
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        if check_credentials(username, password):
+            headers = remember(request, username)
+            return HTTPFound(location=request.route_url('home'), headers=headers)
+        return {'error': 'Invalid username or password.'}
+
+
+@view_config(
+    route_name='logout',
+    renderer='../templates/logout.jinja2',
+    require_csrf=False
+)
+def logout_view(request):
+    """."""
+    headers = forget(request)
+    return HTTPFound(location=request.route_url('home'), headers=headers)
