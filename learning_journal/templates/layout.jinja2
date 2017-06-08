@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}The Short Side{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ request.static_path('learning_journal:static/reset.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ request.static_path('learning_journal:static/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header">
+            <ul class="left_icon_menu">
+                <li><a href="{{ request.route_url('home') }}"><img src=" {{ request.static_path('learning_journal:static/png/001-home.png') }}"></a></li> <!--Home Icon, plainicon, http://www.plainicon.com-->
+                {% if request.authenticated_userid %}
+                    <li><a href="{{ request.route_url('new_entry') }}"><img src=" {{ request.static_path('learning_journal:static/png/002-calendar.png') }}"></a></li><!--Calendar Icon, Madebyoliver-->
+                    <li><a href="{{ request.route_url('logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ request.route_url('login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+            <ul class="right_icon_menu">
+                <li><a href="https://www.linkedin.com/in/alex-short-234972138/"><img src=" {{ request.static_path('learning_journal:static/png/003-linked-in-square-button.png') }}"></a><li><!--Linked-In Icon, http://www.plainicon.com-->
+                <li><a href="https://github.com/shortaj/"><img src=" {{ request.static_path('learning_journal:static/png/004-circle.png') }}"></a></li><!--Github Icon, Dave Gandy, http://fontawesome.io-->
+            </ul>
+        </div>
+    </header><!-- /header -->
+    <div class="bodyData">
+        
+    {% block body %}-{% endblock %}
+    </div>
+    <footer>
+        <div class="footer">
+            <h4>Created By: Alex Short</h4>
+            <hr id="bottomFooter">
+        </div>
+    </footer>
+</body>
+</html> 

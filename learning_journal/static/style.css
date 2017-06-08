@@ -1,0 +1,103 @@
+ul.left_icon_menu {
+    position: relative;
+    float: left;
+    left: 10px;
+    top: 18px;
+}
+
+ul.right_icon_menu {
+    position: relative;
+    float: right;
+    top: 18px;
+    right: 10px;
+}
+
+ul.left_icon_menu li {
+    display: inline;
+    padding: 5px;
+}
+
+ul.right_icon_menu li {
+    display: inline;
+    padding: 5px;
+}
+
+div.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 75px;
+    background: white;
+    border-bottom: 2px solid black;
+}
+
+div.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    height: 50px;
+    padding-top: 10px;
+    border-top: 2px solid black;
+    background: white;
+}
+
+div.bodyData {
+    position: relative;
+    top: 100px;
+    bottom: 75px;
+    left: 30px;
+    width: 90%;
+}
+
+div.journaldivs {
+    padding: 10px;
+    width: 200px;
+    float: left;
+}
+
+hr.journaldivs {
+    position: relative;
+    float: left;
+    width: 40px;
+    margin: 3px 3px;
+}
+
+hr#bottomFooter {
+    width: 85px;
+}
+
+h4 {
+    font-size: 1.3em;
+}   
+
+h4.entry {
+    font-weight: 700;
+}
+
+p.date {
+    font-style: italic;
+}
+
+a {
+    text-decoration: none;
+}
+footer{
+    background-color: white;
+}
+textarea {
+    resize: none;
+    width: 100%;
+    height: 200px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+input.input {
+    margin-left: 10px;
+}
+
+hr.entry {
+    width: 200px;
+}
