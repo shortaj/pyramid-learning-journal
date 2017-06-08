@@ -16,8 +16,10 @@ from ..models import Entry
 )
 def home_view(request):
     """The default home page view return."""
+    list_entries = []
     entries = request.dbsession.query(Entry).order_by(Entry.date).all()
-    return {'entries': entries}
+    list_entries.append(entries)
+    return {'entries': list_entries}
 
 
 @view_config(
