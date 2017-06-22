@@ -1,6 +1,17 @@
 {% extends "layout.jinja2" %}
 {% block title %} Short Side {% endblock%}
 {% block body %}
+    {% if request.authenticated_userid %}
+        <div class="form">
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ request.session.get_csrf_token() }}" />
+                <label for="title">Title: </label><input class="input" type="text" name="title" required=""><hr class="entry" align="left">
+                <label for="title">Tags: </label><input class="input" type="text" name="tags" required=""><hr class="entry" align="left">
+                <label for="body">Body: </label><textarea name="body" cols="40" rows="10" resize="none" required="" placeholder="Today I learned..."></textarea>
+                <input id="submit_button" type="submit" value="Submit">
+            </form>
+        </div>
+    {% endif %}
     {% for entry in entries %}
     <div class="journaldivs">
         <h4><a href="{{ request.route_url('entry', id=entry.id) }}">{{ entry.title }}</a></h4>

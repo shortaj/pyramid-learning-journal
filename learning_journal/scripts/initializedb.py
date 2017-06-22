@@ -10,19 +10,10 @@ from pyramid.paster import (
 
 from pyramid.scripts.common import parse_vars
 
-from ..models.meta import Base
-from ..models import (
-    get_engine,
-    get_session_factory,
-    get_tm_session,
-    )
-
 from pyramid.paster import (
     get_appsettings,
     setup_logging,
 )
-
-from pyramid.scripts.common import parse_vars
 
 from ..models.meta import Base
 from ..models import (
@@ -55,7 +46,6 @@ def main(argv=sys.argv):
     setup_logging(config_uri)
     settings = get_appsettings(config_uri, options=options)
     settings["sqlalchemy.url"] = os.environ["DATABASE_URL"]
-
     engine = get_engine(settings)
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
@@ -66,6 +56,6 @@ def main(argv=sys.argv):
         dbsession = get_tm_session(session_factory, transaction.manager)
         for entry in ENTRIES:
             model = Entry(title=entry['title'],
-                        body=entry['body'],
-                        date=entry['date'])
+                          body=entry['body'],
+                          date=entry['date'])
         dbsession.add(model)

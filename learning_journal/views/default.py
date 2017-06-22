@@ -5,21 +5,26 @@ from pyramid.httpexceptions import HTTPFound
 from datetime import date as Date
 from pyramid.security import remember, forget
 from learning_journal.security import check_credentials
-
 from ..models import Entry
 
 
 @view_config(
     route_name='home',
     renderer='../templates/index.jinja2',
-    require_csrf=False
+    require_csrf=True,
 )
 def home_view(request):
     """The default home page view return."""
-    list_entries = []
+    if request.method == "POST":
+        title = request.POST['title']
+        tags = request.POST['tags']
+        body = request.POST['body']
+        date = Date.today()
+        new_entry = Entry(title=title, tags=tags, body=body, date=date)
+        request.dbsession.add(new_entry)
+        return HTTPFound(location=request.route_url('home'))
     entries = request.dbsession.query(Entry).order_by(Entry.date).all()
-    list_entries.append(entries)
-    return {'entries': list_entries}
+    return {'entries': entries}
 
 
 @view_config(
@@ -37,26 +42,6 @@ def detail_view(request):
 
 
 @view_config(
-    route_name='new_entry',
-    renderer='../templates/new_entry.jinja2',
-    permission='token',
-    require_csrf=True
-)
-def new_entry_view(request):
-    """The default home page view return."""
-    if request.method == "POST":
-        title = request.POST['title']
-        body = request.POST['body']
-        date = Date.today()
-        new_entry = Entry(title=title, body=body, date=date)
-        request.dbsession.add(new_entry)
-        return HTTPFound(location=request.route_url('home'))
-    elif request.method == 'GET':
-        return {}
-    return HTTPFound(location=request.route_url('home'))
-
-
-@view_config(
     route_name='edit',
     renderer='../templates/edit_entry.jinja2',
     permission='token',
@@ -66,7 +51,8 @@ def edit_entry_view(request):
     """Set the edit POST and GET http responses."""
     e = request.dbsession.query(Entry).get(request.matchdict['id'])
     if request.method == "POST":
-        e.title = request.POST['title'].capitalize()
+        e.title = request.POST['title']
+        e.tags = request.POST['tags']
         e.body = request.POST['body']
         e.date = Date.today()
         request.dbsession.flush()

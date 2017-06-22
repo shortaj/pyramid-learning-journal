@@ -11,7 +11,6 @@
             <ul class="left_icon_menu">
                 <li><a href="{{ request.route_url('home') }}"><img src=" {{ request.static_path('learning_journal:static/png/001-home.png') }}"></a></li> <!--Home Icon, plainicon, http://www.plainicon.com-->
                 {% if request.authenticated_userid %}
-                    <li><a href="{{ request.route_url('new_entry') }}"><img src=" {{ request.static_path('learning_journal:static/png/002-calendar.png') }}"></a></li><!--Calendar Icon, Madebyoliver-->
                     <li><a href="{{ request.route_url('logout') }}">Logout</a></li>
                 {% else %}
                     <li><a href="{{ request.route_url('login') }}">Login</a></li>
