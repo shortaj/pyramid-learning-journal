@@ -23,7 +23,7 @@ def home_view(request):
         new_entry = Entry(title=title, tags=tags, body=body, date=date)
         request.dbsession.add(new_entry)
         return HTTPFound(location=request.route_url('home'))
-    entries = request.dbsession.query(Entry).order_by(Entry.date).all()
+    entries = request.dbsession.query(Entry).order_by(Entry.date.desc()).all()
     return {'entries': entries}
 
 

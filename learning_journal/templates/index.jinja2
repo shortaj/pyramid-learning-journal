@@ -5,11 +5,26 @@
         <div class="form">
             <form method="POST">
                 <input type="hidden" name="csrf_token" value="{{ request.session.get_csrf_token() }}" />
-                <label for="title">Title: </label><input class="input" type="text" name="title" required=""><hr class="entry" align="left">
-                <label for="title">Tags: </label><input class="input" type="text" name="tags" required=""><hr class="entry" align="left">
-                <label for="body">Body: </label><textarea name="body" cols="40" rows="10" resize="none" required="" placeholder="Today I learned..."></textarea>
+                <label for="title">Title: </label><input class="input" type="text" name="title" required=""><hr class="entry"align="left">
+                <label for="tags">Tags: </label><input class="input" type="text" name="tags"><hr class="entry"align="left">
+                <label for="date">Date: </label><input id="date" type="date" name="date" required=""><hr class="entry"align="left">
+                <label for="body">Body: </label><textarea name="body" cols="40" rows="10" resize="none" required="">"Today I learned..."</textarea>
                 <input id="submit_button" type="submit" value="Submit">
             </form>
+        <script type="text/javascript" charset="utf-8" async defer>
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1;
+            var yyyy = today.getFullYear();
+            
+            if(dd < 10) {
+            dd = '0' + dd;
+            }
+            if(mm < 10) {
+            mm = '0' + mm;
+            }
+            var dateControl = document.querySelector('input[type="date"]');
+            dateControl.value = yyyy + '-' + mm + '-' + dd;</script>
         </div>
     {% endif %}
     {% for entry in entries %}
