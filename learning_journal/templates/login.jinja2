@@ -3,9 +3,10 @@
     Login
     {% endblock %}
 
-    {{ error }}
 
     {% block body %}
+        <p>{{ error }}</p>
+        <br>
         <div class="form">
             <form method="POST">
                 <label for="username">Username: </label><input class="input" type="text" name="username" required>

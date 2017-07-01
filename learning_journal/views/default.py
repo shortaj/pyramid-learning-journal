@@ -19,7 +19,7 @@ def home_view(request):
         title = request.POST['title']
         tags = request.POST['tags']
         body = request.POST['body']
-        date = Date.today()
+        date = request.POST['date']
         new_entry = Entry(title=title, tags=tags, body=body, date=date)
         request.dbsession.add(new_entry)
         return HTTPFound(location=request.route_url('home'))
@@ -54,7 +54,7 @@ def edit_entry_view(request):
         e.title = request.POST['title']
         e.tags = request.POST['tags']
         e.body = request.POST['body']
-        e.date = Date.today()
+        e.date = Date.date()
         request.dbsession.flush()
         return HTTPFound(location=request.route_url('entry', id=e.id))
     elif request.method == "GET":
