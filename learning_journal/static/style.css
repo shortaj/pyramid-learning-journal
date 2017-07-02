@@ -29,6 +29,7 @@ div.header {
     height: 75px;
     background: white;
     border-bottom: 2px solid black;
+    z-index: 9;
 }
 
 div.footer {
@@ -48,6 +49,8 @@ div.bodyData {
     bottom: 75px;
     left: 30px;
     width: 90%;
+    max-height: 70vh;
+    overflow-y: auto;
 }
 
 div.journaldivs {
@@ -87,7 +90,7 @@ footer{
 }
 textarea {
     resize: none;
-    width: 100%;
+    width: 80%;
     height: 200px;
     margin-top: 10px;
     margin-bottom: 10px;
